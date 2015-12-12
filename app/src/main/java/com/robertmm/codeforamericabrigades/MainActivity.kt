@@ -5,15 +5,18 @@ import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.view.View
 import android.support.design.widget.NavigationView
+import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import com.robertmm.codeforamericabrigades.dummy.DummyContent
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, BrigadeFragment.OnListFragmentInteractionListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +35,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val navigationView = findViewById(R.id.nav_view) as NavigationView
         navigationView.setNavigationItemSelectedListener(this)
+    }
+
+    override fun onListFragmentInteraction(item: DummyContent.DummyItem) {
+        Log.d("bob", "Item ${item.content}")
     }
 
     override fun onBackPressed() {
@@ -69,7 +76,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val id = item.itemId
 
         if (id == R.id.nav_camera) {
-            // Handle the camera action
+            setFragmentAsContent(fragment = BrigadeFragment.newInstance(1))
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
@@ -85,5 +92,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
         drawer.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    private fun setFragmentAsContent(fragment: Fragment): Int {
+        val fragmentManager = supportFragmentManager
+        val ft = fragmentManager.beginTransaction()
+        ft.replace(R.id.content_frame, fragment)
+        return ft.commit()
     }
 }
